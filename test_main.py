@@ -17,3 +17,10 @@ def test_cannot_add_the_same_text_twice():
     text_holder.add_text('hello')
     with pytest.raises(Exception):
         text_holder.add_text('hello')
+
+
+def test_adding_new_text_ignores_letter_case():
+    text_holder = TextHolder()
+    text_holder.add_text('hello')
+    with pytest.raises(Exception):
+        text_holder.add_text('HeLlO')
