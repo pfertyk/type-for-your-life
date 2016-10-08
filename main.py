@@ -3,6 +3,6 @@ class TextHolder:
         self.texts = []
 
     def add_text(self, text):
-        if text in self.texts:
+        if text.lower() in (text.lower() for text in self.texts):
             raise Exception('You cannot add the same text twice')
         self.texts.append(text)
