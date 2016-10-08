@@ -1,2 +1,2 @@
 class TextHolder:
-    pass
+    texts = []
