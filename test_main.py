@@ -15,12 +15,12 @@ def test_can_add_new_phrase():
 def test_cannot_add_the_same_phrase_twice():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         phrase_holder.add_phrase('hello')
 
 
 def test_adding_new_phrase_ignores_letter_case():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         phrase_holder.add_phrase('HeLlO')

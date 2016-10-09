@@ -4,5 +4,5 @@ class PhrasesHolder:
 
     def add_phrase(self, phrase):
         if phrase.lower() in (phrase.lower() for phrase in self.phrases):
-            raise Exception('You cannot add the same phrase twice')
+            raise ValueError('You cannot add the same phrase twice')
         self.phrases.add(phrase)
