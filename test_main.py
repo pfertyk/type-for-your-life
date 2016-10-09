@@ -2,14 +2,14 @@ from main import PhrasesHolder
 import pytest
 
 
-def test_phrase_list_is_empty_by_defaut():
-    assert PhrasesHolder().phrases == []
+def test_initially_there_are_no_phrases():
+    assert PhrasesHolder().phrases == set()
 
 
-def test_can_add_phrase_to_list():
+def test_can_add_new_phrase():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
-    assert phrase_holder.phrases == ['hello']
+    assert phrase_holder.phrases == {'hello'}
 
 
 def test_cannot_add_the_same_phrase_twice():
