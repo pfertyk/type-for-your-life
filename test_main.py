@@ -85,3 +85,8 @@ def test_if_there_are_no_phrases_then_typing_selects_nothing():
     phrase_holder = PhrasesHolder()
     phrase_holder.send_char('x')
     assert phrase_holder.current_phrase is None
+
+
+def test_send_char_does_not_accept_empty_string():
+    with pytest.raises(ValueError):
+        PhrasesHolder().send_char('')
