@@ -13,5 +13,5 @@ class PhrasesHolder:
     def send_char(self, char):
         if not self.current_phrase:
             for phrase in self.phrases:
-                if phrase.startswith(char):
+                if phrase.lower().startswith(char.lower()):
                     self.current_phrase = phrase
