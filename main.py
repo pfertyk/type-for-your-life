@@ -4,6 +4,13 @@ class PhrasesHolder:
         self.current_phrase = None
         self.current_phrase_left = None
 
+        def empty_rcc_callback(char):
+            pass
+
+        if not rejected_char_callback:
+            rejected_char_callback = empty_rcc_callback
+        self.rejected_char_callback = rejected_char_callback
+
     def add_phrase(self, phrase):
         if phrase.lower() in (phrase.lower() for phrase in self.phrases):
             raise ValueError('You cannot add the same phrase twice')
@@ -19,6 +26,9 @@ class PhrasesHolder:
                 if phrase.lower().startswith(char.lower()):
                     self.current_phrase = phrase
                     self.current_phrase_left = phrase[1:]
+                    break
+            else:
+                self.rejected_char_callback(char)
         else:
             if self.current_phrase_left.startswith(char):
                 self.current_phrase_left = self.current_phrase_left[1:]
