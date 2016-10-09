@@ -83,3 +83,14 @@ def test_acc_not_called_when_subsequent_character_does_not_match(mocker):
     acc.reset_mock()
     phrase_holder.send_char('x')
     acc.assert_not_called()
+
+
+def test_acc_called_when_phrase_is_finished(mocker):
+    acc = mocker.stub()
+    phrase_holder = PhrasesHolder(accepted_char_callback=acc)
+    phrase_holder.add_phrase('hey')
+    phrase_holder.send_char('h')
+    phrase_holder.send_char('e')
+    acc.reset_mock()
+    phrase_holder.send_char('y')
+    acc.assert_called_with('y', 'hey', '')
