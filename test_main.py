@@ -26,7 +26,7 @@ def test_adding_new_phrases_ignores_letter_case():
         phrase_holder.add_phrase('HeLlO')
 
 
-def test_cannot_add_phrase_starting_with_the_same_letter_as_existing_phrases():
+def test_first_letter_of_a_new_phrase_must_be_unique():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
     with pytest.raises(ValueError):
