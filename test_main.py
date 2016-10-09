@@ -42,3 +42,10 @@ def test_first_letter_of_a_new_phrase_must_be_unique_ignoring_case():
 
 def test_initially_current_phrase_is_none():
     assert PhrasesHolder().current_phrase is None
+
+
+def test_typing_first_character_of_phrase_makes_it_current_phrase():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('sup')
+    phrase_holder.send_char('s')
+    assert phrase_holder.current_phrase == 'sup'
