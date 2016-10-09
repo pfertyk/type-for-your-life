@@ -11,6 +11,7 @@ class PhrasesHolder:
         self.phrases.add(phrase)
 
     def send_char(self, char):
-        for phrase in self.phrases:
-            if phrase.startswith(char):
-                self.current_phrase = phrase
+        if not self.current_phrase:
+            for phrase in self.phrases:
+                if phrase.startswith(char):
+                    self.current_phrase = phrase
