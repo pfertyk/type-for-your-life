@@ -1,26 +1,26 @@
-from main import TextHolder
+from main import PhrasesHolder
 import pytest
 
 
-def test_text_list_is_empty_by_defaut():
-    assert TextHolder().texts == []
+def test_phrase_list_is_empty_by_defaut():
+    assert PhrasesHolder().phrases == []
 
 
-def test_can_add_text_to_list():
-    text_holder = TextHolder()
-    text_holder.add_text('hello')
-    assert text_holder.texts == ['hello']
+def test_can_add_phrase_to_list():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('hello')
+    assert phrase_holder.phrases == ['hello']
 
 
-def test_cannot_add_the_same_text_twice():
-    text_holder = TextHolder()
-    text_holder.add_text('hello')
+def test_cannot_add_the_same_phrase_twice():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('hello')
     with pytest.raises(Exception):
-        text_holder.add_text('hello')
+        phrase_holder.add_phrase('hello')
 
 
-def test_adding_new_text_ignores_letter_case():
-    text_holder = TextHolder()
-    text_holder.add_text('hello')
+def test_adding_new_phrase_ignores_letter_case():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('hello')
     with pytest.raises(Exception):
-        text_holder.add_text('HeLlO')
+        phrase_holder.add_phrase('HeLlO')

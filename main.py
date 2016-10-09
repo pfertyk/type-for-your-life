@@ -1,8 +1,8 @@
-class TextHolder:
+class PhrasesHolder:
     def __init__(self):
-        self.texts = []
+        self.phrases = []
 
-    def add_text(self, text):
-        if text.lower() in (text.lower() for text in self.texts):
-            raise Exception('You cannot add the same text twice')
-        self.texts.append(text)
+    def add_phrase(self, phrase):
+        if phrase.lower() in (phrase.lower() for phrase in self.phrases):
+            raise Exception('You cannot add the same phrase twice')
+        self.phrases.append(phrase)
