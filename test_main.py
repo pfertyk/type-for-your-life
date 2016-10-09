@@ -116,6 +116,14 @@ def test_typing_subsequent_correct_character_reduces_current_phrase_left():
     assert phrase_holder.current_phrase_left == 'llo'
 
 
+def test_typing_incorrect_character_does_not_change_current_phrase_left():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('hello')
+    phrase_holder.send_char('h')
+    phrase_holder.send_char('x')
+    assert phrase_holder.current_phrase_left == 'ello'
+
+
 def test_typing_last_correct_character_removes_phrase():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
