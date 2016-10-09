@@ -19,7 +19,7 @@ def test_cannot_add_the_same_phrase_twice():
         phrase_holder.add_phrase('hello')
 
 
-def test_adding_new_phrases_ignores_letter_case():
+def test_cannot_add_the_same_phrase_twice_ignoring_case():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
     with pytest.raises(ValueError):
@@ -31,3 +31,10 @@ def test_first_letter_of_a_new_phrase_must_be_unique():
     phrase_holder.add_phrase('hello')
     with pytest.raises(ValueError):
         phrase_holder.add_phrase('hi')
+
+
+def test_first_letter_of_a_new_phrase_must_be_unique_ignoring_case():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('hello')
+    with pytest.raises(ValueError):
+        phrase_holder.add_phrase('Hi')
