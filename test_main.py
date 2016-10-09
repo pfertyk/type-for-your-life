@@ -124,4 +124,12 @@ def test_typing_last_correct_character_removes_phrase():
     phrase_holder.send_char('l')
     phrase_holder.send_char('l')
     phrase_holder.send_char('o')
-    assert not phrase_holder.phrases
+    assert phrase_holder.phrases == set()
+
+
+def test_finishing_the_phrase_resets_current_phrase():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('he')
+    phrase_holder.send_char('h')
+    phrase_holder.send_char('e')
+    assert phrase_holder.current_phrase is None
