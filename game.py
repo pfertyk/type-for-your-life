@@ -1,7 +1,7 @@
 import pygame
 
 pygame.init()
-# pygame.mixer.quit()
+pygame.mixer.quit()
 screen = pygame.display.set_mode((400, 300))
 done = False
 
