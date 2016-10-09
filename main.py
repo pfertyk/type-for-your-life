@@ -25,3 +25,4 @@ class PhrasesHolder:
                 if not self.current_phrase_left:
                     self.phrases.remove(self.current_phrase)
                     self.current_phrase = None
+                    self.current_phrase_left = None
