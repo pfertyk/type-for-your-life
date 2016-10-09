@@ -60,8 +60,15 @@ def test_if_phrase_is_already_selected_than_new_phrase_cannot_be_selected():
     assert phrase_holder.current_phrase == 'sup'
 
 
-def test_selecting_current_phrase_ignores_case():
+def test_selecting_current_phrase_ignores_phrase_case():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('Sup')
     phrase_holder.send_char('s')
     assert phrase_holder.current_phrase == 'Sup'
+
+
+def test_selecting_current_phrase_ignores_char_case():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('sup')
+    phrase_holder.send_char('S')
+    assert phrase_holder.current_phrase == 'sup'
