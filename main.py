@@ -11,6 +11,8 @@ class PhrasesHolder:
         self.phrases.add(phrase)
 
     def send_char(self, char):
+        if not char:
+            raise ValueError('Char must not be empty')
         if not self.current_phrase:
             for phrase in self.phrases:
                 if phrase.lower().startswith(char.lower()):
