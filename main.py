@@ -2,6 +2,7 @@ class PhrasesHolder:
     def __init__(self):
         self.phrases = set()
         self.current_phrase = None
+        self.current_phrase_left = None
 
     def add_phrase(self, phrase):
         if phrase.lower() in (phrase.lower() for phrase in self.phrases):
