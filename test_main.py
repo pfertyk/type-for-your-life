@@ -72,3 +72,10 @@ def test_selecting_current_phrase_ignores_char_case():
     phrase_holder.add_phrase('sup')
     phrase_holder.send_char('S')
     assert phrase_holder.current_phrase == 'sup'
+
+
+def test_if_no_phrase_matches_first_characted_then_none_is_selected():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('sup')
+    phrase_holder.send_char('x')
+    assert phrase_holder.current_phrase is None
