@@ -38,3 +38,7 @@ def test_first_letter_of_a_new_phrase_must_be_unique_ignoring_case():
     phrase_holder.add_phrase('hello')
     with pytest.raises(ValueError):
         phrase_holder.add_phrase('Hi')
+
+
+def test_initially_current_phrase_is_none():
+    assert PhrasesHolder().current_phrase is None
