@@ -1,5 +1,5 @@
 class PhrasesHolder:
-    def __init__(self):
+    def __init__(self, rejected_char_callback=None):
         self.phrases = set()
         self.current_phrase = None
         self.current_phrase_left = None
