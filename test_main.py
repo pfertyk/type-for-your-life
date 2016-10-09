@@ -106,3 +106,11 @@ def test_after_selecting_current_phrase_there_is_one_char_less_left():
     phrase_holder.add_phrase('hello')
     phrase_holder.send_char('h')
     assert phrase_holder.current_phrase_left == 'ello'
+
+
+def test_typing_subsequent_correct_character_reduces_current_phrase_left():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('hello')
+    phrase_holder.send_char('h')
+    phrase_holder.send_char('e')
+    assert phrase_holder.current_phrase_left == 'llo'
