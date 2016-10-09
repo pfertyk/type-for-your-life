@@ -17,7 +17,7 @@ class PhrasesHolder:
         self.phrases.add(phrase)
 
     def send_char(self, char):
-        if not char or len(char) > 1:
+        if len(char) != 1:
             raise ValueError('Char must have exactly 1 character')
 
         if not self.current_phrase:
