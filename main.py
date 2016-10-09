@@ -36,3 +36,5 @@ class PhrasesHolder:
                     self.phrases.remove(self.current_phrase)
                     self.current_phrase = None
                     self.current_phrase_left = None
+            else:
+                self.rejected_char_callback(char)
