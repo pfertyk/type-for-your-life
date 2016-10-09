@@ -9,3 +9,8 @@ class PhrasesHolder:
         if phrase[0].lower() in (phrase[0].lower() for phrase in self.phrases):
             raise ValueError('First letter of a new phrase must be unique')
         self.phrases.add(phrase)
+
+    def send_char(self, char):
+        for phrase in self.phrases:
+            if phrase.startswith(char):
+                self.current_phrase = phrase
