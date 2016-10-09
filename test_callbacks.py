@@ -45,6 +45,17 @@ def test_rcc_not_called_when_subsequent_character_is_correct(mocker):
     rcc.assert_not_called()
 
 
+def test_rcc_not_called_when_phrase_is_finished(mocker):
+    rcc = mocker.stub()
+    phrase_holder = PhrasesHolder(rejected_char_callback=rcc)
+    phrase_holder.add_phrase('hey')
+    phrase_holder.send_char('h')
+    phrase_holder.send_char('e')
+    rcc.reset_mock()
+    phrase_holder.send_char('y')
+    rcc.assert_not_called()
+
+
 def test_can_define_accepted_char_callback():
     PhrasesHolder(accepted_char_callback=lambda a, b, c: None)
 
