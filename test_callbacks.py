@@ -25,9 +25,16 @@ def test_rcc_called_when_subsequent_character_is_incorrect(mocker):
     phrase_holder = PhrasesHolder(rejected_char_callback=rcc)
     phrase_holder.add_phrase('hello')
     phrase_holder.send_char('h')
-    rcc.assert_not_called()
+    phrase_holder.send_char('a')
+    rcc.assert_called_once_with('a')
+
+
+def test_rcc_not_called_when_subsequent_character_is_correct(mocker):
+    rcc = mocker.stub()
+    phrase_holder = PhrasesHolder(rejected_char_callback=rcc)
+    phrase_holder.add_phrase('hello')
     phrase_holder.send_char('h')
-    rcc.assert_called_with('h')
+    rcc.assert_not_called()
 
 
 def test_can_define_accepted_char_callback():
