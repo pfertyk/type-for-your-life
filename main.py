@@ -41,12 +41,13 @@ class PhrasesHolder:
 
     def _accept_char(self, char):
         self.current_phrase_left = self.current_phrase_left[1:]
-        if not self.current_phrase_left:
-            self.phrases.remove(self.current_phrase)
-            self.current_phrase = None
-            self.current_phrase_left = None
 
         if self.accepted_char_callback:
             self.accepted_char_callback(
                 char, self.current_phrase, self.current_phrase_left
             )
+
+        if not self.current_phrase_left:
+            self.phrases.remove(self.current_phrase)
+            self.current_phrase = None
+            self.current_phrase_left = None
