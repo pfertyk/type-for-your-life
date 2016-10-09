@@ -87,6 +87,11 @@ def test_if_there_are_no_phrases_then_typing_selects_nothing():
     assert phrase_holder.current_phrase is None
 
 
-def test_send_char_does_not_accept_empty_string():
+def test_char_must_not_be_empty():
     with pytest.raises(ValueError):
         PhrasesHolder().send_char('')
+
+
+def test_char_must_not_be_longer_than_one_character():
+    with pytest.raises(ValueError):
+        PhrasesHolder().send_char('ab')
