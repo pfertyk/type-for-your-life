@@ -19,11 +19,11 @@ def test_cannot_add_the_same_phrase_twice():
         phrase_holder.add_phrase('hello')
 
 
-def test_cannot_add_the_same_phrase_twice_ignoring_case():
+def test_can_add_the_same_phrase_with_different_case():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
-    with pytest.raises(ValueError):
-        phrase_holder.add_phrase('HeLlO')
+    phrase_holder.add_phrase('HeLlO')
+    assert phrase_holder.phrases == {'hello', 'HeLlO'}
 
 
 def test_first_letter_of_a_new_phrase_must_be_unique():
@@ -33,11 +33,11 @@ def test_first_letter_of_a_new_phrase_must_be_unique():
         phrase_holder.add_phrase('hi')
 
 
-def test_first_letter_of_a_new_phrase_must_be_unique_ignoring_case():
+def test_first_letter_of_a_new_phrase_can_be_repeated_with_different_case():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('hello')
-    with pytest.raises(ValueError):
-        phrase_holder.add_phrase('Hi')
+    phrase_holder.add_phrase('Hi')
+    assert phrase_holder.phrases == {'hello', 'Hi'}
 
 
 def test_initially_current_phrase_is_none():
@@ -60,18 +60,11 @@ def test_if_phrase_is_already_selected_than_new_phrase_cannot_be_selected():
     assert phrase_holder.current_phrase == 'sup'
 
 
-def test_selecting_current_phrase_ignores_phrase_case():
+def test_selecting_current_phrase_is_case_sensitive():
     phrase_holder = PhrasesHolder()
     phrase_holder.add_phrase('Sup')
     phrase_holder.send_char('s')
-    assert phrase_holder.current_phrase == 'Sup'
-
-
-def test_selecting_current_phrase_ignores_char_case():
-    phrase_holder = PhrasesHolder()
-    phrase_holder.add_phrase('sup')
-    phrase_holder.send_char('S')
-    assert phrase_holder.current_phrase == 'sup'
+    assert phrase_holder.current_phrase is None
 
 
 def test_if_no_phrase_matches_first_characted_then_none_is_selected():
@@ -121,6 +114,14 @@ def test_typing_incorrect_character_does_not_change_current_phrase_left():
     phrase_holder.add_phrase('hello')
     phrase_holder.send_char('h')
     phrase_holder.send_char('x')
+    assert phrase_holder.current_phrase_left == 'ello'
+
+
+def test_typing_wrong_case_character_does_not_change_current_phrase_left():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('Hello')
+    phrase_holder.send_char('H')
+    phrase_holder.send_char('E')
     assert phrase_holder.current_phrase_left == 'ello'
 
 
