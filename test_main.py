@@ -133,3 +133,11 @@ def test_finishing_the_phrase_resets_current_phrase():
     phrase_holder.send_char('h')
     phrase_holder.send_char('e')
     assert phrase_holder.current_phrase is None
+
+
+def test_finishing_the_phrase_resets_current_phrase_left():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('he')
+    phrase_holder.send_char('h')
+    phrase_holder.send_char('e')
+    assert phrase_holder.current_phrase_left is None
