@@ -49,3 +49,12 @@ def test_typing_first_character_of_phrase_makes_it_current_phrase():
     phrase_holder.add_phrase('sup')
     phrase_holder.send_char('s')
     assert phrase_holder.current_phrase == 'sup'
+
+
+def test_if_phrase_is_already_selected_than_new_phrase_cannot_be_selected():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('sup')
+    phrase_holder.add_phrase('notmuch')
+    phrase_holder.send_char('s')
+    phrase_holder.send_char('n')
+    assert phrase_holder.current_phrase == 'sup'
