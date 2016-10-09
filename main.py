@@ -19,3 +19,6 @@ class PhrasesHolder:
                 if phrase.lower().startswith(char.lower()):
                     self.current_phrase = phrase
                     self.current_phrase_left = phrase[1:]
+        else:
+            if self.current_phrase_left.startswith(char):
+                self.current_phrase_left = self.current_phrase_left[1:]
