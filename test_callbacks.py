@@ -2,7 +2,7 @@ from main import PhrasesHolder
 
 
 def test_can_define_rejected_char_callback():
-    PhrasesHolder(rejected_char_callback=lambda x: None)
+    PhrasesHolder(rejected_char_callback=lambda a: None)
 
 
 def test_rcc_called_when_no_phrase_is_available(mocker):
@@ -28,3 +28,7 @@ def test_rcc_called_when_subsequent_character_is_incorrect(mocker):
     rcc.assert_not_called()
     phrase_holder.send_char('h')
     rcc.assert_called_with('h')
+
+
+def test_can_define_accepted_char_callback():
+    PhrasesHolder(accepted_char_callback=lambda a, b, c: None)
