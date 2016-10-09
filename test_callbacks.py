@@ -63,3 +63,23 @@ def test_acc_called_when_first_character_matches(mocker):
     phrase_holder.add_phrase('hello')
     phrase_holder.send_char('h')
     acc.assert_called_with('h', 'hello', 'ello')
+
+
+def test_acc_called_when_subsequent_character_matches(mocker):
+    acc = mocker.stub()
+    phrase_holder = PhrasesHolder(accepted_char_callback=acc)
+    phrase_holder.add_phrase('hello')
+    phrase_holder.send_char('h')
+    acc.reset_mock()
+    phrase_holder.send_char('e')
+    acc.assert_called_with('e', 'hello', 'llo')
+
+
+def test_acc_not_called_when_subsequent_character_does_not_match(mocker):
+    acc = mocker.stub()
+    phrase_holder = PhrasesHolder(accepted_char_callback=acc)
+    phrase_holder.add_phrase('hello')
+    phrase_holder.send_char('h')
+    acc.reset_mock()
+    phrase_holder.send_char('x')
+    acc.assert_not_called()
