@@ -99,3 +99,10 @@ def test_char_must_not_be_longer_than_one_character():
 
 def test_initially_current_phrase_left_is_none():
     assert PhrasesHolder().current_phrase_left is None
+
+
+def test_after_selecting_current_phrase_there_is_one_char_less_left():
+    phrase_holder = PhrasesHolder()
+    phrase_holder.add_phrase('hello')
+    phrase_holder.send_char('h')
+    assert phrase_holder.current_phrase_left == 'ello'
