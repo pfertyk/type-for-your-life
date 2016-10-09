@@ -18,3 +18,4 @@ class PhrasesHolder:
             for phrase in self.phrases:
                 if phrase.lower().startswith(char.lower()):
                     self.current_phrase = phrase
+                    self.current_phrase_left = phrase[1:]
