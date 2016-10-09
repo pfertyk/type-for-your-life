@@ -95,3 +95,7 @@ def test_char_must_not_be_empty():
 def test_char_must_not_be_longer_than_one_character():
     with pytest.raises(ValueError):
         PhrasesHolder().send_char('ab')
+
+
+def test_initially_current_phrase_left_is_none():
+    assert PhrasesHolder().current_phrase_left is None
