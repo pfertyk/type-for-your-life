@@ -6,12 +6,8 @@ class PhrasesHolder:
         self.current_phrase = None
         self.current_phrase_left = None
 
-        def empty_rcc_callback(char):
-            pass
-
-        if not rejected_char_callback:
-            rejected_char_callback = empty_rcc_callback
         self.rejected_char_callback = rejected_char_callback
+        self.accepted_char_callback = accepted_char_callback
 
     def add_phrase(self, phrase):
         if phrase.lower() in (phrase.lower() for phrase in self.phrases):
@@ -23,20 +19,34 @@ class PhrasesHolder:
     def send_char(self, char):
         if not char or len(char) > 1:
             raise ValueError('Char must have exactly 1 character')
+
         if not self.current_phrase:
             for phrase in self.phrases:
                 if phrase.lower().startswith(char.lower()):
                     self.current_phrase = phrase
-                    self.current_phrase_left = phrase[1:]
+                    self.current_phrase_left = phrase
+                    self._accept_char(char)
                     break
             else:
-                self.rejected_char_callback(char)
+                self._reject_char(char)
         else:
             if self.current_phrase_left.startswith(char):
-                self.current_phrase_left = self.current_phrase_left[1:]
-                if not self.current_phrase_left:
-                    self.phrases.remove(self.current_phrase)
-                    self.current_phrase = None
-                    self.current_phrase_left = None
+                self._accept_char(char)
             else:
-                self.rejected_char_callback(char)
+                self._reject_char(char)
+
+    def _reject_char(self, char):
+        if self.rejected_char_callback:
+            self.rejected_char_callback(char)
+
+    def _accept_char(self, char):
+        self.current_phrase_left = self.current_phrase_left[1:]
+        if not self.current_phrase_left:
+            self.phrases.remove(self.current_phrase)
+            self.current_phrase = None
+            self.current_phrase_left = None
+
+        if self.accepted_char_callback:
+            self.accepted_char_callback(
+                char, self.current_phrase, self.current_phrase_left
+            )
