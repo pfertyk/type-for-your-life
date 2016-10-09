@@ -22,3 +22,5 @@ class PhrasesHolder:
         else:
             if self.current_phrase_left.startswith(char):
                 self.current_phrase_left = self.current_phrase_left[1:]
+                if not self.current_phrase_left:
+                    self.phrases.remove(self.current_phrase)
