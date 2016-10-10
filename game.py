@@ -43,7 +43,7 @@ class PygamePhraseHolder:
     def draw(self, background):
         for i, phrase in enumerate(self.abc.keys()):
             if phrase == self.phrase_holder.current_phrase:
-                background_color = (128, 128, 0)
+                background_color = (255, 180, 0)
             else:
                 background_color = None
             text = self.font.render(phrase, 1, (0, 222, 255), background_color)
@@ -51,7 +51,7 @@ class PygamePhraseHolder:
             text_pos.topleft = (0, i * 40)
             background.blit(text, text_pos)
 
-            text_left = self.font.render(self.abc[phrase], 1, (255, 180, 0))
+            text_left = self.font.render(self.abc[phrase], 1, (0, 0, 0))
             text_left_pos = text_left.get_rect()
             text_left_pos.topright = text_pos.topright
             background.blit(text_left, text_left_pos)
@@ -68,7 +68,11 @@ background = background.convert()
 
 pygame_phrase_holder = PygamePhraseHolder()
 
-while not pygame_phrase_holder.done:
+done = False
+
+while not done:
+    if pygame_phrase_holder.done:
+        done = True
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
