@@ -7,31 +7,54 @@ class PygamePhraseHolder:
     def __init__(self):
         self.font = pygame.font.Font(None, 36)
 
-        available_phrases = ['How big?', 'That is my fish!', 'Nooo way...']
-        self.phrase_holder = PhrasesHolder(self.reject_char, self.accept_char)
-        phrase = random.choice(available_phrases)
-        self.phrase_holder.add_phrase(phrase)
+        self.abc = {}
 
-        self.phrase = self.phrase_left = phrase
+        available_phrases = [
+            'How big?',
+            'That is my fish!',
+            'Nooo way...',
+            'Are you still there?',
+            'Gordon\'s ALIVE!',
+        ]
+
+        self.phrase_holder = PhrasesHolder(self.reject_char, self.accept_char)
+
+        while len(self.phrase_holder.phrases) != 4:
+            phrase = random.choice(available_phrases)
+
+            try:
+                self.phrase_holder.add_phrase(phrase)
+                self.abc[phrase] = phrase
+            except ValueError:
+                print('Adding a new phrase failed, retrying')
 
         self.done = False
 
     def accept_char(self, char, phrase, phrase_left):
-        self.phrase_left = phrase_left
+        self.abc[phrase] = phrase_left
         if not phrase_left:
+            self.abc.pop(phrase)
+        if not self.abc:
             self.done = True
 
     def reject_char(self, char):
         print('Rejected', char)
 
     def draw(self, background):
-        text = self.font.render(self.phrase, 1, (0, 0, 255))
-        background.blit(text, text.get_rect())
+        for i, phrase in enumerate(self.abc.keys()):
+            if phrase == self.phrase_holder.current_phrase:
+                background_color = (128, 128, 0)
+            else:
+                background_color = None
+            text = self.font.render(phrase, 1, (0, 222, 255), background_color)
+            text_pos = text.get_rect()
+            text_pos.topleft = (0, i * 40)
+            background.blit(text, text_pos)
 
-        text_left = self.font.render(self.phrase_left, 1, (0, 0, 0))
-        text_left_pos = text_left.get_rect()
-        text_left_pos.topright = text.get_rect().topright
-        background.blit(text_left, text_left_pos)
+            text_left = self.font.render(self.abc[phrase], 1, (255, 180, 0))
+            text_left_pos = text_left.get_rect()
+            text_left_pos.topright = text_pos.topright
+            background.blit(text_left, text_left_pos)
 
 
 pygame.init()
