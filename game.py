@@ -2,12 +2,12 @@ import pygame
 import random
 from main import PhrasesHolder
 
+WIDTH = 1280
+
 
 class PygamePhraseHolder:
     def __init__(self):
         self.font = pygame.font.Font(None, 36)
-
-        self.abc = {}
 
         available_phrases = [
             'How big?',
@@ -17,50 +17,62 @@ class PygamePhraseHolder:
             'Gordon\'s ALIVE!',
         ]
 
+        self.stream = []
+        self.phrase_to_stream = {}
+
         self.phrase_holder = PhrasesHolder(self.reject_char, self.accept_char)
 
-        while len(self.phrase_holder.phrases) != 4:
+        while len(self.phrase_holder.phrases) != 2:
             phrase = random.choice(available_phrases)
 
             try:
                 self.phrase_holder.add_phrase(phrase)
-                self.abc[phrase] = phrase
+                self.add_to_stream(phrase)
             except ValueError:
                 print('Adding a new phrase failed, retrying')
 
         self.done = False
 
+    def add_to_stream(self, phrase):
+        if self.stream:
+            offset = self.stream[-1][2][1]
+        else:
+            offset = WIDTH//2
+
+        background_text = self.font.render(phrase, 1, (127, 127, 127))
+        text = self.font.render(phrase, 1, (0, 0, 0))
+
+        topleft = (offset, 300)
+
+        item = [background_text, text, topleft]
+        self.phrase_to_stream[phrase] = item
+
+        self.stream.append(item)
+
     def accept_char(self, char, phrase, phrase_left):
-        self.abc[phrase] = phrase_left
+        item = self.phrase_to_stream[phrase]
+        item[1] = self.font.render(phrase_left, 1, (0, 0, 0))
         if not phrase_left:
-            self.abc.pop(phrase)
-        if not self.abc:
+            self.stream.remove(item)
+        if not self.stream:
             self.done = True
 
     def reject_char(self, char):
         print('Rejected', char)
 
     def draw(self, background):
-        for i, phrase in enumerate(self.abc.keys()):
-            if phrase == self.phrase_holder.current_phrase:
-                background_color = (255, 180, 0)
-            else:
-                background_color = None
-            text = self.font.render(phrase, 1, (0, 222, 255), background_color)
-            text_pos = text.get_rect()
-            text_pos.topleft = (0, i * 40)
-            background.blit(text, text_pos)
-
-            text_left = self.font.render(self.abc[phrase], 1, (0, 0, 0))
-            text_left_pos = text_left.get_rect()
-            text_left_pos.topright = text_pos.topright
-            background.blit(text_left, text_left_pos)
+        for item in self.stream:
+            phrase, phrase_left, topleft = item
+            background.blit(phrase, topleft)
+            rect0 = phrase.get_rect(topleft=topleft)
+            rect = phrase_left.get_rect(topright=rect0.topright)
+            background.blit(phrase_left, rect)
 
 
 pygame.init()
 pygame.mixer.quit()
 
-screen = pygame.display.set_mode((400, 300))
+screen = pygame.display.set_mode((WIDTH, 720))
 background_color = (255, 255, 255)
 
 background = pygame.Surface(screen.get_size())
