@@ -3,14 +3,18 @@ import random
 from main import PhrasesHolder
 
 WIDTH = 1280
+HEIGHT = 720
 FPS = 30
+
+SLOT_COUNT = 2
+MAX_PHRASES = 4
 
 
 class PygamePhraseHolder:
     def __init__(self):
         self.font = pygame.font.Font(None, 36)
 
-        available_phrases = [
+        self.available_phrases = [
             'How big?',
             'That is my fish!',
             'Nooo way...',
@@ -18,37 +22,69 @@ class PygamePhraseHolder:
             'Gordon\'s ALIVE!',
         ]
 
+        self.phrase_count = 0
+        self.used_phrases = set()
+        self.last_phrase_time = None
+        self.phrase_interval = 1000
+
         self.stream = []
         self.phrase_to_stream = {}
 
+        self.slots = []
+
+        for i in range(SLOT_COUNT):
+            self.slots.append(
+                pygame.Rect(WIDTH - 10, 100 + HEIGHT//4*i, 20, 20)
+            )
+
         self.phrase_holder = PhrasesHolder(self.reject_char, self.accept_char)
-
-        while len(self.phrase_holder.phrases) != 2:
-            phrase = random.choice(available_phrases)
-
-            try:
-                self.phrase_holder.add_phrase(phrase)
-                self.add_to_stream(phrase)
-            except ValueError:
-                print('Adding a new phrase failed, retrying')
 
         self.done = False
 
-    def add_to_stream(self, phrase):
-        if self.stream:
-            offset = self.stream[-1][2][1]
-        else:
-            offset = WIDTH//2
+    def choose_new_word(self):
+        if self.phrase_count == MAX_PHRASES:
+            return
 
-        background_text = self.font.render(phrase, 1, (127, 127, 127))
-        text = self.font.render(phrase, 1, (0, 0, 0))
+        if self.last_phrase_time:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_phrase_time < self.phrase_interval:
+                return
 
-        topleft = (offset, 300)
+        available_slots = []
+        for slot in self.slots:
+            for item in self.stream:
+                if slot.colliderect(item[0].get_rect(topleft=item[2])):
+                    break
+            else:
+                available_slots.append(slot)
 
-        item = [background_text, text, topleft]
-        self.phrase_to_stream[phrase] = item
+        if not available_slots:
+            return
 
-        self.stream.append(item)
+        slot = random.choice(available_slots)
+        while True:
+            phrase = random.choice(self.available_phrases)
+            if phrase in self.used_phrases:
+                print('Phrase was already used, retrying')
+                continue
+
+            try:
+                self.phrase_holder.add_phrase(phrase)
+
+                background_text = self.font.render(phrase, 1, (127, 127, 127))
+                text = self.font.render(phrase, 1, (0, 0, 0))
+
+                topleft = slot.center
+
+                item = [background_text, text, topleft]
+                self.phrase_to_stream[phrase] = item
+
+                self.stream.append(item)
+                self.phrase_count += 1
+                self.last_phrase_time = pygame.time.get_ticks()
+                break
+            except ValueError:
+                print('Adding a new phrase failed, retrying')
 
     def accept_char(self, char, phrase, phrase_left):
         item = self.phrase_to_stream[phrase]
@@ -62,6 +98,8 @@ class PygamePhraseHolder:
         print('Rejected', char)
 
     def draw(self, background):
+        self.choose_new_word()
+
         for item in self.stream:
             phrase, phrase_left, topleft = item
             background.blit(phrase, topleft)
@@ -76,12 +114,15 @@ class PygamePhraseHolder:
                 self.done = True
                 break
 
+        for slot in self.slots:
+            pygame.draw.rect(background, (0, 255, 0), slot)
+
 
 pygame.init()
 pygame.mixer.quit()
 clock = pygame.time.Clock()
 
-screen = pygame.display.set_mode((WIDTH, 720))
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
 background_color = (255, 255, 255)
 
 background = pygame.Surface(screen.get_size())
