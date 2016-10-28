@@ -71,6 +71,11 @@ class PygamePhraseHolder:
 
             item[2] = (topleft[0] - 1, topleft[1])
 
+            if item[2][0] < 0:
+                print('Sorry, you lost!')
+                self.done = True
+                break
+
 
 pygame.init()
 pygame.mixer.quit()
