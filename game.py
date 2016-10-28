@@ -3,6 +3,7 @@ import random
 from main import PhrasesHolder
 
 WIDTH = 1280
+FPS = 30
 
 
 class PygamePhraseHolder:
@@ -68,9 +69,12 @@ class PygamePhraseHolder:
             rect = phrase_left.get_rect(topright=rect0.topright)
             background.blit(phrase_left, rect)
 
+            item[2] = (topleft[0] - 1, topleft[1])
+
 
 pygame.init()
 pygame.mixer.quit()
+clock = pygame.time.Clock()
 
 screen = pygame.display.set_mode((WIDTH, 720))
 background_color = (255, 255, 255)
@@ -96,3 +100,4 @@ while not done:
 
     screen.blit(background, (0, 0))
     pygame.display.flip()
+    clock.tick(FPS)
