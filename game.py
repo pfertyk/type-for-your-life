@@ -127,7 +127,7 @@ class PygamePhraseHolder:
                 break
 
         for slot in self.slots:
-            pygame.draw.rect(background, (0, 255, 0), slot)
+            pygame.draw.rect(background, colors.SLOT, slot)
 
 
 pygame.init()
@@ -135,7 +135,6 @@ pygame.mixer.quit()
 clock = pygame.time.Clock()
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-background_color = (255, 255, 255)
 
 background = pygame.Surface(screen.get_size())
 background = background.convert()
@@ -153,7 +152,7 @@ while not done:
         elif event.type == pygame.KEYDOWN and event.unicode:
             pygame_phrase_holder.phrase_holder.send_char(event.unicode)
 
-    background.fill(background_color)
+    background.fill(colors.GAME_BACKGROUND)
     pygame_phrase_holder.draw(background)
 
     screen.blit(background, (0, 0))
