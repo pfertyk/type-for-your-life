@@ -88,6 +88,7 @@ class PygamePhraseHolder:
                 item = [background_text, text, topleft]
                 self.phrase_to_stream[phrase] = item
 
+                self.used_phrases.add(phrase)
                 self.stream.append(item)
                 self.phrase_count += 1
                 self.last_phrase_time = pygame.time.get_ticks()
