@@ -14,6 +14,8 @@ MAX_PHRASES = 4
 
 class Phrase:
     def __init__(self, phrase, topleft):
+        self.padding = 10
+        self.frame_width = 4  # TODO: extract to settings?
         self.font = pygame.font.Font(None, 36)
 
         self.full_phrase = self.font.render(
@@ -27,6 +29,13 @@ class Phrase:
             phrase, 1, colors.PHRASE_FONT_REMAINING
         )
 
+        phrase_size = (
+            self.full_phrase.get_width() + 2 * self.padding,
+            self.full_phrase.get_height() + 2 * self.padding
+        )
+
+        self.frame = pygame.Rect(topleft, phrase_size)
+
         self.topleft = topleft
 
     def update(self, phrase_left):
@@ -36,15 +45,25 @@ class Phrase:
 
     def move(self):
         self.topleft = (self.topleft[0] - 1, self.topleft[1])
+        self.frame.topleft = self.topleft
 
     def draw(self, background):
-        background.blit(self.full_phrase, self.topleft)
-        rect0 = self.full_phrase.get_rect(topleft=self.topleft)
+        pygame.draw.rect(background, colors.PHRASE_BACKGROUND, self.frame)
+        pygame.draw.rect(
+            background, colors.PHRASE_FRAME, self.frame, self.frame_width
+        )
+
+        topleft = (
+            self.topleft[0] + self.padding, self.topleft[1] + self.padding
+        )
+
+        background.blit(self.full_phrase, topleft)
+        rect0 = self.full_phrase.get_rect(topleft=topleft)
         rect = self.remaining_phrase.get_rect(topright=rect0.topright)
         background.blit(self.remaining_phrase, rect)
 
     def get_rect(self):
-        return self.full_phrase.get_rect(topleft=self.topleft)
+        return self.frame
 
 
 class PygamePhraseHolder:
