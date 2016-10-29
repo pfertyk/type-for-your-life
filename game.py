@@ -1,6 +1,8 @@
 import pygame
 import random
+
 from main import PhrasesHolder
+import colors
 
 WIDTH = 1280
 HEIGHT = 720
@@ -71,8 +73,15 @@ class PygamePhraseHolder:
             try:
                 self.phrase_holder.add_phrase(phrase)
 
-                background_text = self.font.render(phrase, 1, (127, 127, 127))
-                text = self.font.render(phrase, 1, (0, 0, 0))
+                background_text = self.font.render(
+                    phrase,
+                    1,
+                    colors.PHRASE_FONT_COMPLETED,
+                    colors.PHRASE_BACKGROUND
+                )
+                text = self.font.render(
+                    phrase, 1, colors.PHRASE_FONT_REMAINING
+                )
 
                 topleft = slot.center
 
@@ -88,7 +97,9 @@ class PygamePhraseHolder:
 
     def accept_char(self, char, phrase, phrase_left):
         item = self.phrase_to_stream[phrase]
-        item[1] = self.font.render(phrase_left, 1, (0, 0, 0))
+        item[1] = self.font.render(
+            phrase_left, 1, colors.PHRASE_FONT_REMAINING
+        )
         if not phrase_left:
             self.stream.remove(item)
         if not self.stream:
