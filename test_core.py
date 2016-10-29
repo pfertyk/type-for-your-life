@@ -1,4 +1,4 @@
-from main import PhrasesHolder
+from core import PhrasesHolder
 import pytest
 
 

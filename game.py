@@ -1,25 +1,16 @@
 import pygame
 import random
 
-from main import PhrasesHolder
 import colors
-
-WIDTH = 1280
-HEIGHT = 720
-FPS = 30
-
-MAX_PHRASES = 4
-FONT_SIZE = 36
-
-NEW_PHRASE_MAX_AVAILABLE_HEIGHT = 80
-NEW_PHRASE_SAFE_SPACE = 64
+import settings
+from core import PhrasesHolder
 
 
 class Phrase:
     def __init__(self, phrase, midleft):
         self.padding = 10
         self.frame_width = 4  # TODO: extract to settings?
-        self.font = pygame.font.Font(None, FONT_SIZE)
+        self.font = pygame.font.Font(None, settings.FONT_SIZE)
 
         self.full_phrase = self.font.render(
             phrase,
@@ -76,14 +67,18 @@ class Phrase:
 
 class PygamePhraseHolder:
     def __init__(self):
-        self.font = pygame.font.Font(None, FONT_SIZE)
+        self.font = pygame.font.Font(None, settings.FONT_SIZE)
 
         self.available_phrases = [
-            'How big?',
             'That is my fish!',
             'Nooo way...',
             'Are you still there?',
             'Gordon\'s ALIVE!',
+            'Not much to do here',
+            'I don\'t want to live on this planet anymore',
+            'Shut up and take my money!',
+            'I am your father',
+            'Do or do not, there is no trying',
         ]
 
         self.phrase_count = 0
@@ -99,7 +94,7 @@ class PygamePhraseHolder:
         self.done = False
 
     def choose_new_word(self):
-        if self.phrase_count == MAX_PHRASES:
+        if self.phrase_count == settings.MAX_PHRASES:
             return
 
         if self.last_phrase_time:
@@ -110,13 +105,17 @@ class PygamePhraseHolder:
         available_midleft = None
 
         for _ in range(10):
-            available_midleft = (WIDTH, random.randint(
-                NEW_PHRASE_SAFE_SPACE//2,
-                NEW_PHRASE_MAX_AVAILABLE_HEIGHT - NEW_PHRASE_SAFE_SPACE//2
+            available_midleft = (settings.WIDTH, random.randint(
+                settings.NEW_PHRASE_SAFE_SPACE//2,
+                settings.NEW_PHRASE_MAX_AVAILABLE_HEIGHT -
+                settings.NEW_PHRASE_SAFE_SPACE//2
             ))
 
             rect = pygame.Rect(
-                0, 0, NEW_PHRASE_SAFE_SPACE, NEW_PHRASE_SAFE_SPACE
+                0,
+                0,
+                settings.NEW_PHRASE_SAFE_SPACE,
+                settings.NEW_PHRASE_SAFE_SPACE
             )
             rect.center = available_midleft
 
@@ -154,7 +153,7 @@ class PygamePhraseHolder:
 
         if not phrase_left:
             self.stream.remove(item)
-        if not self.stream and self.phrase_count == MAX_PHRASES:
+        if not self.stream and self.phrase_count == settings.MAX_PHRASES:
             print('Congratulations, you won!')
             self.done = True
 
@@ -174,33 +173,3 @@ class PygamePhraseHolder:
                 print('Sorry, you lost!')
                 self.done = True
                 break
-
-
-pygame.init()
-pygame.mixer.quit()
-clock = pygame.time.Clock()
-
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-
-background = pygame.Surface(screen.get_size())
-background = background.convert()
-
-pygame_phrase_holder = PygamePhraseHolder()
-
-done = False
-
-while not done:
-    if pygame_phrase_holder.done:
-        done = True
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-        elif event.type == pygame.KEYDOWN and event.unicode:
-            pygame_phrase_holder.phrase_holder.send_char(event.unicode)
-
-    background.fill(colors.GAME_BACKGROUND)
-    pygame_phrase_holder.draw(background)
-
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
-    clock.tick(FPS)

@@ -1,4 +1,4 @@
-from main import PhrasesHolder
+from core import PhrasesHolder
 
 
 def test_can_define_rejected_char_callback():
