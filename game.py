@@ -103,7 +103,8 @@ class PygamePhraseHolder:
         )
         if not phrase_left:
             self.stream.remove(item)
-        if not self.stream:
+        if not self.stream and self.phrase_count == MAX_PHRASES:
+            print('Congratulations, you won!')
             self.done = True
 
     def reject_char(self, char):
