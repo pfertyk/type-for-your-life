@@ -37,6 +37,7 @@ class Phrase:
         self.frame = pygame.Rect(topleft, phrase_size)
 
         self.topleft = topleft
+        self.text = phrase
 
     def update(self, phrase_left):
         self.remaining_phrase = self.font.render(
@@ -47,11 +48,14 @@ class Phrase:
         self.topleft = (self.topleft[0] - 1, self.topleft[1])
         self.frame.topleft = self.topleft
 
-    def draw(self, background):
+    def draw(self, background, is_active):
+        if is_active:
+            frame_color = colors.PHRASE_FRAME_ACTIVE
+        else:
+            frame_color = colors.PHRASE_FRAME_NORMAL
+
         pygame.draw.rect(background, colors.PHRASE_BACKGROUND, self.frame)
-        pygame.draw.rect(
-            background, colors.PHRASE_FRAME, self.frame, self.frame_width
-        )
+        pygame.draw.rect(background, frame_color, self.frame, self.frame_width)
 
         topleft = (
             self.topleft[0] + self.padding, self.topleft[1] + self.padding
@@ -156,7 +160,9 @@ class PygamePhraseHolder:
         self.choose_new_word()
 
         for item in self.stream:
-            item.draw(background)
+            item.draw(
+                background, self.phrase_holder.current_phrase == item.text
+            )
             item.move()
 
             if item.topleft[0] < 0:
