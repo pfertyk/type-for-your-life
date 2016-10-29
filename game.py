@@ -12,6 +12,41 @@ SLOT_COUNT = 2
 MAX_PHRASES = 4
 
 
+class Phrase:
+    def __init__(self, phrase, topleft):
+        self.font = pygame.font.Font(None, 36)
+
+        self.full_phrase = self.font.render(
+            phrase,
+            1,
+            colors.PHRASE_FONT_COMPLETED,
+            colors.PHRASE_BACKGROUND
+        )
+
+        self.remaining_phrase = self.font.render(
+            phrase, 1, colors.PHRASE_FONT_REMAINING
+        )
+
+        self.topleft = topleft
+
+    def update(self, phrase_left):
+        self.remaining_phrase = self.font.render(
+            phrase_left, 1, colors.PHRASE_FONT_REMAINING
+        )
+
+    def move(self):
+        self.topleft = (self.topleft[0] - 1, self.topleft[1])
+
+    def draw(self, background):
+        background.blit(self.full_phrase, self.topleft)
+        rect0 = self.full_phrase.get_rect(topleft=self.topleft)
+        rect = self.remaining_phrase.get_rect(topright=rect0.topright)
+        background.blit(self.remaining_phrase, rect)
+
+    def get_rect(self):
+        return self.full_phrase.get_rect(topleft=self.topleft)
+
+
 class PygamePhraseHolder:
     def __init__(self):
         self.font = pygame.font.Font(None, 36)
@@ -55,7 +90,7 @@ class PygamePhraseHolder:
         available_slots = []
         for slot in self.slots:
             for item in self.stream:
-                if slot.colliderect(item[0].get_rect(topleft=item[2])):
+                if slot.colliderect(item.get_rect()):
                     break
             else:
                 available_slots.append(slot)
@@ -64,6 +99,7 @@ class PygamePhraseHolder:
             return
 
         slot = random.choice(available_slots)
+
         while True:
             phrase = random.choice(self.available_phrases)
             if phrase in self.used_phrases:
@@ -72,24 +108,12 @@ class PygamePhraseHolder:
 
             try:
                 self.phrase_holder.add_phrase(phrase)
-
-                background_text = self.font.render(
-                    phrase,
-                    1,
-                    colors.PHRASE_FONT_COMPLETED,
-                    colors.PHRASE_BACKGROUND
-                )
-                text = self.font.render(
-                    phrase, 1, colors.PHRASE_FONT_REMAINING
-                )
-
-                topleft = slot.center
-
-                item = [background_text, text, topleft]
-                self.phrase_to_stream[phrase] = item
-
                 self.used_phrases.add(phrase)
+
+                item = Phrase(phrase, slot.topleft)
+
                 self.stream.append(item)
+                self.phrase_to_stream[phrase] = item
                 self.phrase_count += 1
                 self.last_phrase_time = pygame.time.get_ticks()
                 break
@@ -98,9 +122,8 @@ class PygamePhraseHolder:
 
     def accept_char(self, char, phrase, phrase_left):
         item = self.phrase_to_stream[phrase]
-        item[1] = self.font.render(
-            phrase_left, 1, colors.PHRASE_FONT_REMAINING
-        )
+        item.update(phrase_left)
+
         if not phrase_left:
             self.stream.remove(item)
         if not self.stream and self.phrase_count == MAX_PHRASES:
@@ -114,15 +137,10 @@ class PygamePhraseHolder:
         self.choose_new_word()
 
         for item in self.stream:
-            phrase, phrase_left, topleft = item
-            background.blit(phrase, topleft)
-            rect0 = phrase.get_rect(topleft=topleft)
-            rect = phrase_left.get_rect(topright=rect0.topright)
-            background.blit(phrase_left, rect)
+            item.draw(background)
+            item.move()
 
-            item[2] = (topleft[0] - 1, topleft[1])
-
-            if item[2][0] < 0:
+            if item.topleft[0] < 0:
                 print('Sorry, you lost!')
                 self.done = True
                 break
