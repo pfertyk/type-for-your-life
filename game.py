@@ -8,8 +8,6 @@ from core import PhrasesHolder
 
 class Phrase:
     def __init__(self, phrase, midleft):
-        self.padding = 10
-        self.frame_width = 4  # TODO: extract to settings?
         self.font = pygame.font.Font(None, settings.FONT_SIZE)
 
         self.full_phrase = self.font.render(
@@ -24,8 +22,8 @@ class Phrase:
         )
 
         phrase_size = (
-            self.full_phrase.get_width() + 2 * self.padding,
-            self.full_phrase.get_height() + 2 * self.padding
+            self.full_phrase.get_width() + 2 * settings.PHRASE_PADDING,
+            self.full_phrase.get_height() + 2 * settings.PHRASE_PADDING
         )
 
         self.frame = pygame.Rect((0, 0), phrase_size)
@@ -50,10 +48,13 @@ class Phrase:
             frame_color = colors.PHRASE_FRAME_NORMAL
 
         pygame.draw.rect(background, colors.PHRASE_BACKGROUND, self.frame)
-        pygame.draw.rect(background, frame_color, self.frame, self.frame_width)
+        pygame.draw.rect(
+            background, frame_color, self.frame, settings.PHRASE_FRAME_WIDTH
+        )
 
         topleft = (
-            self.topleft[0] + self.padding, self.topleft[1] + self.padding
+            self.topleft[0] + settings.PHRASE_PADDING,
+            self.topleft[1] + settings.PHRASE_PADDING
         )
 
         background.blit(self.full_phrase, topleft)
@@ -69,20 +70,10 @@ class PygamePhraseHolder:
     def __init__(self):
         self.font = pygame.font.Font(None, settings.FONT_SIZE)
 
-        self.available_phrases = [
-            'That is my fish!',
-            'Nooo way...',
-            'Are you still there?',
-            'Gordon\'s ALIVE!',
-            'Not much to do here',
-            'I don\'t want to live on this planet anymore',
-            'Shut up and take my money!',
-            'I am your father',
-            'Do or do not, there is no trying',
-        ]
+        self.available_phrases = list(set(settings.AVAILABLE_PHRASES))
+        random.shuffle(self.available_phrases)
 
         self.phrase_count = 0
-        self.used_phrases = set()
         self.last_phrase_time = None
         self.phrase_interval = 4000
 
@@ -128,14 +119,10 @@ class PygamePhraseHolder:
             return
 
         while True:
-            phrase = random.choice(self.available_phrases)
-            if phrase in self.used_phrases:
-                print('Phrase was already used, retrying')
-                continue
+            phrase = self.available_phrases.pop(0)
 
             try:
                 self.phrase_holder.add_phrase(phrase)
-                self.used_phrases.add(phrase)
 
                 item = Phrase(phrase, available_midleft)
 
@@ -146,6 +133,7 @@ class PygamePhraseHolder:
                 break
             except ValueError:
                 print('Adding a new phrase failed, retrying')
+                self.available_phrases.append(phrase)
 
     def accept_char(self, char, phrase, phrase_left):
         item = self.phrase_to_stream[phrase]
