@@ -74,6 +74,7 @@ class PygamePhraseHolder:
         random.shuffle(self.available_phrases)
 
         self.phrase_count = 0
+        self.remaining_phrases_count = settings.MAX_PHRASES
         self.last_phrase_time = None
         self.phrase_interval = 4000
 
@@ -141,7 +142,8 @@ class PygamePhraseHolder:
 
         if not phrase_left:
             self.stream.remove(item)
-        if not self.stream and self.phrase_count == settings.MAX_PHRASES:
+            self.remaining_phrases_count -= 1
+        if not self.stream and not self.remaining_phrases_count:
             print('Congratulations, you won!')
             self.done = True
 
@@ -161,3 +163,15 @@ class PygamePhraseHolder:
                 print('Sorry, you lost!')
                 self.done = True
                 break
+
+        self._draw_status(background)
+
+    def _draw_status(self, background):
+        text_remaining = self.font.render(
+            'Remaining: {}'.format(self.remaining_phrases_count),
+            1,
+            colors.STATUS_FONT
+        )
+        background.blit(
+            text_remaining, (0, settings.NEW_PHRASE_MAX_AVAILABLE_HEIGHT)
+        )
